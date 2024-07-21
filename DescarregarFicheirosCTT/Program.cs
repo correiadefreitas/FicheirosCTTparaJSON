@@ -15,16 +15,22 @@ if (args.Count() == 0 ||
     || x.Equals("/help", StringComparison.CurrentCultureIgnoreCase) 
     || x.Equals("-a", StringComparison.CurrentCultureIgnoreCase))))
 {
-    Console.WriteLine("Programa que descarrega, descompacta e converte para JSON os ficheiros dos CTT relativos aos códigos postais.\r\n\tParametros:" +
-        "\r\n\t\t-obter\tUtiliza as seguintes entradas do 'FicheirosCTTparaJSON.ini'" +
-        "\r\n\t\t\t[obter] nome_utilizador Nome de utilizador utilizado no site dos CTT (Ex.: o_seu_email@empresa.pt)" +
-        "\r\n\t\t\t[obter] senha Senha utilizada no site dos CTT" +
-        "\r\n\t\t\t[obter] morada_autenticacao URL de autenticação do site dos CTT (Ex.: https://www.ctt.pt/fecas/login)" +
-        "\r\n\t\t\t[obter] morada_zip URL do ZIP com os ficheiros dos códigos postais (Ex.: https://appserver2.ctt.pt/feapl_2/app/restricted/postalCodeSearch/postalCodeDownloadFiles!downloadPostalCodeFile.jspx)" +
-        "\r\n\t\t\t[obter] nome_ficheiro_ctt Nome completo do ZIP com os ficheiros dos códigos postais (todos_cp.zip)" +
-        "\r\n\t\t-extrair\tUtiliza as seguintes entradas do 'FicheirosCTTparaJSON.ini'" +
-        "\r\n\t\t\t[extrair] nome_utilizador Nome de utilizador utilizado no site dos CTT" +
-        "\r\n\t\t-json\t");
+    Console.WriteLine("Programa que descarrega, descompacta e converte para JSON os ficheiros dos CTT relativos aos códigos postais.\r\n\tParametros e entradas do 'FicheirosCTTparaJSON.ini':" +
+        "\r\n\t\t-obter" +
+        "\r\n\t\t\t[obter] nome_utilizador\r\n\t\t\tNome de utilizador utilizado no site dos CTT (Ex.: o_seu_email@empresa.pt)" +
+        "\r\n\t\t\t[obter] senha\r\n\t\t\tSenha utilizada no site dos CTT" +
+        "\r\n\t\t\t[obter] morada_autenticacao\r\n\t\t\tURL de autenticação do site dos CTT (Ex.: https://www.ctt.pt/fecas/login)" +
+        "\r\n\t\t\t[obter] morada_zip\r\n\t\t\tURL do ZIP com os ficheiros dos códigos postais (Ex.: https://appserver2.ctt.pt/feapl_2/app/restricted/postalCodeSearch/postalCodeDownloadFiles!downloadPostalCodeFile.jspx)" +
+        "\r\n\t\t\t[obter] nome_ficheiro_ctt\r\n\t\t\tNome completo do ZIP com os ficheiros dos códigos postais (Ex.: todos_cp.zip)" +
+        "\r\n\t\t-extrair" +
+        "\r\n\t\t\t[obter] nome_ficheiro_ctt\r\n\t\t\tNome completo do ZIP com os ficheiros dos códigos postais (Ex.: todos_cp.zip)" +
+        "\r\n\t\t\t[extrair] nome_pasta_ctt\r\n\t\t\tNome da pasta para onde descompactar (Ex.: todos_cp)" +
+        "\r\n\t\t-json" +
+        "\r\n\t\t\t[extrair] nome_pasta_ctt\r\n\t\t\tNome da pasta onde estão os ficheiros de texto descompactados" +
+        "\r\n\t\t\t[json] nome_ficheiro_distritos\r\n\t\t\tNome completo do ficheiro de distritos" +
+        "\r\n\t\t\t[json] nome_ficheiro_concelhos\r\n\t\t\tNome completo do ficheiro de concelhos" +
+        "\r\n\t\t\t[json] nome_ficheiro_todos_cp\r\n\t\t\tNome completo do ficheiro de códigos postais" +
+        "\r\n\t\t\t[json] nome_pasta_json\r\n\t\t\tNome da pasta onde guardar os ficheiros JSON (Ex.: todos_cp)");
     return;
 }
 
@@ -58,8 +64,12 @@ if (!string.IsNullOrEmpty(args.FirstOrDefault(x => x.Equals("-obter",StringCompa
     string downloadDirectory = Directory.GetCurrentDirectory();
     thisOptions.AddUserProfilePreference("download.default_directory", downloadDirectory);
 
+    ChromeDriverService thisService = ChromeDriverService.CreateDefaultService();
+    thisService.SuppressInitialDiagnosticInformation = true;
+    thisService.HideCommandPromptWindow = true;
+
     // Inicializa o browser
-    var browser = new ChromeDriver(thisOptions);
+    var browser = new ChromeDriver(thisService, thisOptions);
 
     // Fazer o login
     browser.Navigate().GoToUrl(morada_autenticacao);
@@ -108,7 +118,7 @@ if (!string.IsNullOrEmpty(args.FirstOrDefault(x => x.Equals("-extrair", StringCo
 
 }
 
-if (!string.IsNullOrEmpty(args.FirstOrDefault(x => x.Equals("-json", StringComparison.CurrentCultureIgnoreCase))))
+if (!string.IsNullOrEmpty(args.FirstOrDefault(x => x.Equals("-json", StringComparison.CurrentCultureIgnoreCase))) && Directory.Exists(nome_pasta_ctt))
 {
     IList<String> cabecalhoDistritos = new ReadOnlyCollection<string>([
         "DD",
