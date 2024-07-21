@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "DescarregarFicheirosCTT": {
+      "commandName": "Project",
+      "commandLineArgs": "-obter -extrair -json"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    }
+  }
+}
