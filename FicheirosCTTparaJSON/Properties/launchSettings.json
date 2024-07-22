@@ -2,7 +2,7 @@
   "profiles": {
     "DescarregarFicheirosCTT": {
       "commandName": "Project",
-      "commandLineArgs": "-obter -extrair -json"
+      "commandLineArgs": "-obter -extrair -json -limpar"
     },
     "WSL": {
       "commandName": "WSL2",
