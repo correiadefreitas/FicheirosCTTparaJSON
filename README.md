@@ -1,3 +1,3 @@
-# DescarregarFicheirosCTT
+# FicheirosCTTparaJSON
 
-Programa que descarrega, descompacta e converte para JSON os ficheiros dos CTT relativos aos códigos postais.
+Programa que descarrega, descompacta e converte para JSON os ficheiros dos CTT relativos aos cÃ³digos postais.
